@@ -1,7 +1,5 @@
 package com.github.tharindusathis.jomodoro.controller;
 
-import static com.github.tharindusathis.jomodoro.controller.FullScreenController.FullscreenStageViews;
-
 import com.github.tharindusathis.jomodoro.timer.Configs;
 import com.github.tharindusathis.jomodoro.timer.CountdownTask;
 import com.github.tharindusathis.jomodoro.util.Constants;
@@ -34,7 +32,7 @@ import javafx.util.Duration;
  *
  * @author tharindusathis
  */
-public class MainController extends Controller {
+public class MainController extends AbstractController {
 
   State currentState = State.INIT;
 

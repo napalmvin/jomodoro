@@ -7,14 +7,14 @@ import javafx.stage.Stage;
 
 public class ControllerManager {
 
-  private Map<ViewConfig, Controller> controllersMap;
+  private Map<ViewConfig, AbstractController> controllersMap;
 
-  private <T extends Controller> T findController(Class<T> controllerType) {
+  private <T extends AbstractController> T findController(Class<T> controllerType) {
     if (controllersMap == null) {
       return null;
     }
 
-    for (Map.Entry<ViewConfig, Controller> entry : controllersMap.entrySet()) {
+    for (Map.Entry<ViewConfig, AbstractController> entry : controllersMap.entrySet()) {
       if (controllerType.isInstance(entry.getValue())) {
         return (T) entry.getValue();
       }
@@ -22,11 +22,11 @@ public class ControllerManager {
     return null;
   }
 
-  public <T extends Controller> Optional<T> getController(Class<T> controllerType) {
+  public <T extends AbstractController> Optional<T> getController(Class<T> controllerType) {
     return Optional.ofNullable(findController(controllerType));
   }
 
-  public void registerController(ViewConfig view, Controller controller, Stage stage) {
+  public void registerController(ViewConfig view, AbstractController controller, Stage stage) {
     if (controllersMap == null) {
       controllersMap = new EnumMap<>(ViewConfig.class);
     }

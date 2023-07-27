@@ -3,7 +3,7 @@ package com.github.tharindusathis.jomodoro.controller;
 import java.util.Optional;
 import javafx.stage.Stage;
 
-public abstract class Controller {
+public abstract class AbstractController {
 
   Stage stage;
   private ControllerManager controllerManager;

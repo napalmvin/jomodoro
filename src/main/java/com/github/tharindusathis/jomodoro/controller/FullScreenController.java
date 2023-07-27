@@ -9,7 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 
-public class FullScreenController extends Controller {
+public class FullScreenController extends AbstractController {
 
   @FXML
   private BorderPane breakView;
@@ -27,33 +27,33 @@ public class FullScreenController extends Controller {
   private TextField tagTextBox;
 
   @FXML
-  void btnCloseOnAction(ActionEvent event) {
+  void btnCloseOnAction(ActionEvent ignoredEvent) {
     getControllerManager()
         .ifPresent(controllerManager -> controllerManager.showView(ViewConfig.MAIN));
   }
 
   @FXML
-  void btnSpinnerBreakDownOnAction(ActionEvent event) {
+  void btnSpinnerBreakDownOnAction(ActionEvent ignoredEvent) {
     changeDurationValue(breakTextBox, -1);
   }
 
   @FXML
-  void btnSpinnerBreakUpOnAction(ActionEvent event) {
+  void btnSpinnerBreakUpOnAction(ActionEvent ignoredEvent) {
     changeDurationValue(breakTextBox, 1);
   }
 
   @FXML
-  void btnSpinnerTimeDownOnAction(ActionEvent event) {
+  void btnSpinnerTimeDownOnAction(ActionEvent ignoredEvent) {
     changeDurationValue(timeTextBox, -1);
   }
 
   @FXML
-  void btnSpinnerTimeUpOnAction(ActionEvent event) {
+  void btnSpinnerTimeUpOnAction(ActionEvent ignoredEvent) {
     changeDurationValue(timeTextBox, 1);
   }
 
   @FXML
-  void btnStartOnAction(ActionEvent event) {
+  void btnStartOnAction(ActionEvent ignoredEvent) {
     startTimer();
   }
 
@@ -145,7 +145,4 @@ public class FullScreenController extends Controller {
     breakProgressBar.setProgress(value);
   }
 
-  enum FullscreenStageViews {
-    START, BREAK
-  }
 }

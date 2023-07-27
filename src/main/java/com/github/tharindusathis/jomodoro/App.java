@@ -123,6 +123,7 @@ public class App extends Application {
     Stage stage = new Stage();
     stage.initOwner(getUtilityStage());
     stage.initStyle(StageStyle.TRANSPARENT);
+
     Scene scene = new Scene(contentRootRegion, screenBounds.getWidth(), screenBounds.getHeight());
     contentRootRegion.setStyle("-fx-background-color: rgba(0,0,0,0.0)");
     scene.setFill(Color.TRANSPARENT);

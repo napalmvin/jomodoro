@@ -11,7 +11,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
 import javafx.util.Duration;
 
-public class NotifyFlashScreenController extends Controller {
+public class NotifyFlashScreenController extends AbstractController {
 
   @FXML
   Rectangle notifyRect;

@@ -6,26 +6,18 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 
-public final class Resources
-{
-    private static final Map<CustomFont,Font> FONTS = new EnumMap<>( CustomFont.class );
+public final class Resources {
+    private static final Map<CustomFonts, Font> FONTS = new EnumMap<>(CustomFonts.class);
 
-    private Resources()
-    {
+    private Resources() {
     }
 
-    public static Optional<Font> getFont( CustomFont name )
-    {
-        return Optional.ofNullable( FONTS.get( name ) );
+    public static Optional<Font> getFont(CustomFonts name) {
+        return Optional.ofNullable(FONTS.get(name));
     }
 
-    public static void addFont( CustomFont name, Font font )
-    {
-        FONTS.put( name, font );
+    public static void addFont(CustomFonts name, Font font) {
+        FONTS.put(name, font);
     }
 
-    public enum CustomFont
-    {
-        ROBOTO_250, ROBOTO_87
-    }
 }

@@ -6,58 +6,43 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class ControllerManager
-{
-    private Map<View,Controller> controllersMap;
+public class ControllerManager {
+    private Map<ViewConfig, Controller> controllersMap;
 
-    private <T extends Controller> T findController( Class<T> controllerType )
-    {
-        if( controllersMap == null ) return null;
+    private <T extends Controller> T findController(Class<T> controllerType) {
+        if (controllersMap == null) return null;
 
-        for (Map.Entry<View, Controller> entry : controllersMap.entrySet()) {
-            if(controllerType.isInstance( entry.getValue())){
+        for (Map.Entry<ViewConfig, Controller> entry : controllersMap.entrySet()) {
+            if (controllerType.isInstance(entry.getValue())) {
                 return (T) entry.getValue();
             }
         }
-        return  null;
+        return null;
     }
 
-    public <T extends Controller> Optional<T> getController( Class<T> controllerType){
-        return Optional.ofNullable( findController( controllerType ) );
+    public <T extends Controller> Optional<T> getController(Class<T> controllerType) {
+        return Optional.ofNullable(findController(controllerType));
     }
 
-    public void registerController( View view, Controller controller, Stage stage )
-    {
-        if( controllersMap == null )
-        {
-            controllersMap = new EnumMap<>( View.class );
+    public void registerController(ViewConfig view, Controller controller, Stage stage) {
+        if (controllersMap == null) {
+            controllersMap = new EnumMap<>(ViewConfig.class);
         }
-        if( controllersMap.containsKey( view ) ) return;
-        controller.setStage( stage );
-        controller.setControllerManager( this );
-        controllersMap.put( view, controller );
+        if (controllersMap.containsKey(view)) return;
+        controller.setStage(stage);
+        controller.setControllerManager(this);
+        controllersMap.put(view, controller);
     }
 
-    public void showView( View view )
-    {
-        controllersMap.forEach( ( v, controller ) ->
+    public void showView(ViewConfig view) {
+        controllersMap.forEach((v, controller) ->
         {
-            if( v == view )
-            {
+            if (v == view) {
                 controller.getStage().show();
-            }
-            else
-            {
+            } else {
                 controller.getStage().hide();
             }
-        } );
+        });
     }
 
-    public enum View
-    {
-        MAIN,
-        FULLSCREEN,
-        TRAY_MENU,
-        NOTIFY_FLASH
-    }
 }

@@ -8,33 +8,28 @@ import java.util.function.Consumer;
 /**
  * @author tharindusathis
  */
-public class CountdownTask extends TimerTask
-{
+public class CountdownTask extends TimerTask {
 
     Consumer<Integer> remainingSecondsSetter;
     int remainingSeconds;
 
-    public CountdownTask()
-    {
+    public CountdownTask() {
     }
 
-    public CountdownTask( int remainingSeconds, Consumer<Integer> remainingSecondsSetter )
-    {
+    public CountdownTask(int remainingSeconds, Consumer<Integer> remainingSecondsSetter) {
         this.remainingSeconds = remainingSeconds;
         this.remainingSecondsSetter = remainingSecondsSetter;
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
         Platform.runLater(() -> {
-        remainingSecondsSetter.accept( remainingSeconds );
-        if( remainingSeconds > 0 )
-        {
-            remainingSeconds--;
-        }else{
-            this.cancel();
-        }
+            remainingSecondsSetter.accept(remainingSeconds);
+            if (remainingSeconds > 0) {
+                remainingSeconds--;
+            } else {
+                this.cancel();
+            }
         });
     }
 }

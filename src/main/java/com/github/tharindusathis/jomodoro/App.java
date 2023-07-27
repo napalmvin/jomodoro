@@ -1,9 +1,10 @@
 package com.github.tharindusathis.jomodoro;
 
 import com.github.tharindusathis.jomodoro.controller.ControllerManager;
-import com.github.tharindusathis.jomodoro.controller.FullScreenController;
-import com.github.tharindusathis.jomodoro.controller.MainController;
-import com.github.tharindusathis.jomodoro.controller.NotifyFlashScreenController;
+import com.github.tharindusathis.jomodoro.controller.ViewConfig;
+import com.github.tharindusathis.jomodoro.timer.Configs;
+import com.github.tharindusathis.jomodoro.util.Constants;
+import com.github.tharindusathis.jomodoro.util.CustomFonts;
 import com.github.tharindusathis.jomodoro.util.Loggers;
 import com.github.tharindusathis.jomodoro.util.Resources;
 import javafx.application.Application;
@@ -21,121 +22,114 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.logging.Level;
 
 /**
  * @author tharindusathis
  */
-public class App extends Application
-{
-    private static final double INIT_UI_SCALE_FACTOR = .4;
-    private Stage mainViewStage;
-    private Stage fullscreenViewStage;
-    private Stage notifyFlashScreenStage;
+public class App extends Application {
 
-    public static void main( String[] args )
-    {
+    public static void main(String[] args) {
         launch();
     }
 
-    private FullScreenController createFullscreenView() throws IOException
-    {
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource( "/com/github/tharindusathis/jomodoro/view/fullscreen-stage.fxml" ) );
+    private void createFullscreenView(ControllerManager manager) throws IOException {
+        URL stageDescriptionUrl = getClass()
+                .getResource("/com/github/tharindusathis/jomodoro/view/fullscreen-stage.fxml");
+        FXMLLoader loader = new FXMLLoader(stageDescriptionUrl);
+
         Region contentRootRegion = loader.load();
 
-        double origW = 1920;
-        double origH = 1080;
+        contentRootRegion.setPrefWidth(Constants.FULL_SCREEN_WIDT);
+        contentRootRegion.setPrefHeight(Constants.FULL_SCREEN_HEIGHT);
 
-        contentRootRegion.setPrefWidth( origW );
-        contentRootRegion.setPrefHeight( origH );
-
-        Group group = new Group( contentRootRegion );
+        Group group = new Group(contentRootRegion);
         StackPane rootPane = new StackPane();
-        rootPane.getChildren().add( group );
-        rootPane.setStyle( "-fx-background-color: rgba(0,0,0,0.8)" );
 
-        Scene scene = new Scene( rootPane, origW, origH );
+        rootPane.getChildren().add(group);
+        rootPane.setStyle("-fx-background-color: rgba(0,0,0,0.8)");
 
-
-        DoubleBinding width = rootPane.maxWidthProperty().divide( origW );
-        group.scaleXProperty().bind( width );
-        group.scaleYProperty().bind( width );
-        rootPane.setMaxWidth( origW );
+        Scene scene = new Scene(rootPane, Constants.FULL_SCREEN_WIDT, Constants.FULL_SCREEN_HEIGHT);
 
 
-        fullscreenViewStage = new Stage();
-        fullscreenViewStage.initOwner( getUtilityStage() );
-        fullscreenViewStage.initStyle( StageStyle.TRANSPARENT );
-        scene.setFill( Color.TRANSPARENT );
-        fullscreenViewStage.setScene( scene );
-        fullscreenViewStage.setAlwaysOnTop( true );
+        DoubleBinding width = rootPane.maxWidthProperty().divide(Constants.FULL_SCREEN_WIDT);
+        group.scaleXProperty().bind(width);
+        group.scaleYProperty().bind(width);
+        rootPane.setMaxWidth(Constants.FULL_SCREEN_WIDT);
 
-        rootPane.setMaxWidth( origW * INIT_UI_SCALE_FACTOR * 2 );
-        return loader.getController();
+
+        Stage stage = createDefaultStage(scene);
+
+        rootPane.setMaxWidth(Constants.FULL_SCREEN_WIDT * Configs.INIT_UI_SCALE_FACTOR * 2);
+        manager.registerController(ViewConfig.FULLSCREEN, loader.getController(), stage);
     }
 
-    private MainController createMainView() throws IOException
-    {
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource( "/com/github/tharindusathis/jomodoro/view/main-stage.fxml" ) );
+    private Stage createDefaultStage(Scene scene) {
+        Stage stage = new Stage();
+        stage.initOwner(getUtilityStage());
+        stage.initStyle(StageStyle.TRANSPARENT);
+        scene.setFill(Color.TRANSPARENT);
+        stage.setScene(scene);
+        stage.setAlwaysOnTop(true);
+        return stage;
+    }
+
+    private Stage createMainView(ControllerManager manager) throws IOException {
+        URL mainStageUrl = getClass().getResource("/com/github/tharindusathis/jomodoro/view/main-stage.fxml");
+        FXMLLoader loader = new FXMLLoader(mainStageUrl);
         Region contentRootRegion = loader.load();
 
         double origW = 720.0;
         double origH = 360.0;
 
-        contentRootRegion.setPrefWidth( origW );
-        contentRootRegion.setPrefHeight( origH );
+        contentRootRegion.setPrefWidth(origW);
+        contentRootRegion.setPrefHeight(origH);
 
-        Group group = new Group( contentRootRegion ); // non-resizable container (Group)
+        Group group = new Group(contentRootRegion); // non-resizable container (Group)
         StackPane rootPane = new StackPane();
-        rootPane.getChildren().add( group );
-        rootPane.setStyle( "-fx-background-color: #00000000" );
-        Scene scene = new Scene( rootPane, origW, origH );
+        rootPane.getChildren().add(group);
+        rootPane.setStyle("-fx-background-color: #00000000");
+        Scene scene = new Scene(rootPane, origW, origH);
 
         // bind the scene's width and height to the scaling parameters on the group
-        DoubleBinding width = scene.widthProperty().divide( origW );
-        group.scaleXProperty().bind( width );
-        group.scaleYProperty().bind( width );
+        DoubleBinding width = scene.widthProperty().divide(origW);
+        group.scaleXProperty().bind(width);
+        group.scaleYProperty().bind(width);
 
-        mainViewStage = new Stage();
-        mainViewStage.initOwner( getUtilityStage() );
-        mainViewStage.initStyle( StageStyle.TRANSPARENT );
-        scene.setFill( Color.TRANSPARENT );
-        mainViewStage.setScene( scene );
-        mainViewStage.setAlwaysOnTop( true );
+        Stage stage = createDefaultStage(scene);
 
         // initial scaling
-        mainViewStage.setWidth( origW * INIT_UI_SCALE_FACTOR );
+        stage.setWidth(origW * Configs.INIT_UI_SCALE_FACTOR);
 
         // restore when manual minimize
-        mainViewStage.iconifiedProperty().addListener(
-                ( ov, t, t1 ) -> mainViewStage.setIconified( false ) );
+        stage.iconifiedProperty().addListener(
+                (ov, t, t1) -> stage.setIconified(false));
 
-        return loader.getController();
+        manager.registerController(ViewConfig.MAIN, loader.getController(), stage);
+        return stage;
     }
 
-    private NotifyFlashScreenController createNotifyFlashScreenView() throws IOException
-    {
+    private void createNotifyFlashScreenView(ControllerManager manager) throws IOException {
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource( "/com/github/tharindusathis/jomodoro/view/notify-flash-screen-stage.fxml" ) );
+                getClass().getResource("/com/github/tharindusathis/jomodoro/view/notify-flash-screen-stage.fxml"));
         Region contentRootRegion = loader.load();
 
         Rectangle2D screenBounds = Screen.getPrimary().getBounds();
-        contentRootRegion.setPrefWidth( screenBounds.getWidth() );
-        contentRootRegion.setPrefHeight( screenBounds.getHeight() );
-        contentRootRegion.setMouseTransparent( true );
-        contentRootRegion.setPickOnBounds( false );
+        contentRootRegion.setPrefWidth(screenBounds.getWidth());
+        contentRootRegion.setPrefHeight(screenBounds.getHeight());
+        contentRootRegion.setMouseTransparent(true);
+        contentRootRegion.setPickOnBounds(false);
 
-        notifyFlashScreenStage = new Stage();
-        notifyFlashScreenStage.initOwner( getUtilityStage() );
-        notifyFlashScreenStage.initStyle( StageStyle.TRANSPARENT );
-        Scene scene = new Scene( contentRootRegion, screenBounds.getWidth(), screenBounds.getHeight() );
-        contentRootRegion.setStyle( "-fx-background-color: rgba(0,0,0,0.0)" );
-        scene.setFill( Color.TRANSPARENT );
-        notifyFlashScreenStage.setScene( scene );
-        notifyFlashScreenStage.setAlwaysOnTop( true );
-        return loader.getController();
+        Stage stage = new Stage();
+        stage.initOwner(getUtilityStage());
+        stage.initStyle(StageStyle.TRANSPARENT);
+        Scene scene = new Scene(contentRootRegion, screenBounds.getWidth(), screenBounds.getHeight());
+        contentRootRegion.setStyle("-fx-background-color: rgba(0,0,0,0.0)");
+        scene.setFill(Color.TRANSPARENT);
+        stage.setScene(scene);
+        stage.setAlwaysOnTop(true);
+        manager.registerController(ViewConfig.NOTIFY_FLASH, loader.getController(), stage);
     }
 
     /**
@@ -143,55 +137,40 @@ public class App extends Application
      *
      * @return Utility styled stage
      */
-    private Stage getUtilityStage()
-    {
+    private Stage getUtilityStage() {
         Stage utilityStage = new Stage();
-        utilityStage.initStyle( StageStyle.UTILITY );
-        utilityStage.setOpacity( 0 );
-        utilityStage.setHeight( 0 );
-        utilityStage.setWidth( 0 );
+        utilityStage.initStyle(StageStyle.UTILITY);
+        utilityStage.setOpacity(0);
+        utilityStage.setHeight(0);
+        utilityStage.setWidth(0);
         utilityStage.show();
         return utilityStage;
     }
 
     @Override
-    public void start( Stage stage )
-    {
-        try
-        {
-            String fontRobotoPath = getClass().getResource( "/com/github/tharindusathis/jomodoro/fonts/Roboto-Medium.ttf" )
-                                              .toExternalForm();
-            Resources.addFont( Resources.CustomFont.ROBOTO_250, Font.loadFont( fontRobotoPath , 250 ) );
-            Resources.addFont( Resources.CustomFont.ROBOTO_87, Font.loadFont( fontRobotoPath, 87 ) );
-        }
-        catch( Exception e )
-        {
-            Loggers.COMMON_LOGGER.log( Level.SEVERE, e::getMessage );
+    public void start(Stage stage) {
+        initFonts();
+        final ControllerManager manager = new ControllerManager();
+        try {
+            createFullscreenView(manager);
+            createNotifyFlashScreenView(manager);
+            createMainView(manager).show();
+        } catch (IOException e) {
+            Loggers.COMMON_LOGGER.log(Level.SEVERE, e::getMessage);
         }
 
-        MainController mainController = null;
-        FullScreenController fullscreenController = null;
-        NotifyFlashScreenController notifyFlashScreenController = null;
-        try
-        {
-            mainController = createMainView();
-            fullscreenController = createFullscreenView();
-            notifyFlashScreenController = createNotifyFlashScreenView();
-        }
-        catch( IOException e )
-        {
-            Loggers.COMMON_LOGGER.log( Level.SEVERE, e::getMessage );
-        }
+    }
 
-        final ControllerManager controllerManager = new ControllerManager();
-        controllerManager.registerController(
-                ControllerManager.View.MAIN, mainController, mainViewStage );
-        controllerManager.registerController(
-                ControllerManager.View.FULLSCREEN, fullscreenController, fullscreenViewStage );
-        controllerManager.registerController(
-                ControllerManager.View.NOTIFY_FLASH, notifyFlashScreenController, notifyFlashScreenStage );
-
-        mainViewStage.show();
+    private void initFonts() {
+        try {
+            String fontPath = getClass()
+                    .getResource("/com/github/tharindusathis/jomodoro/fonts/Roboto-Medium.ttf")
+                    .toExternalForm();
+            Resources.addFont(CustomFonts.ROBOTO_250, Font.loadFont(fontPath, 250));
+            Resources.addFont(CustomFonts.ROBOTO_87, Font.loadFont(fontPath, 87));
+        } catch (Exception e) {
+            Loggers.COMMON_LOGGER.log(Level.SEVERE, e::getMessage);
+        }
     }
 
 
